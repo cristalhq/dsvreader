@@ -10,4 +10,4 @@
 
 ## Documentation
 
-See [these docs](https://godoc.org/github.com/cristaloleg/dsvreader).
+See [these docs](https://godoc.org/github.com/cristalhq/dsvreader).

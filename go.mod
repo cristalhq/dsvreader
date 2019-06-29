@@ -1,1 +1,1 @@
-module github.com/cristaloleg/dsvreader
+module github.com/cristalhq/dsvreader

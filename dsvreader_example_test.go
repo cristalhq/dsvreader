@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/cristaloleg/dsvreader"
+	"github.com/cristalhq/dsvreader"
 )
 
 func ExampleReader() {
