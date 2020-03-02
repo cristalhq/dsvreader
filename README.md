@@ -1,9 +1,9 @@
-# jwt
+# dsvreader
 
-[![Build Status][travis-img]][travis-url]
+[![Build Status][build-img]][build-url]
 [![GoDoc][doc-img]][doc-url]
 [![Go Report Card][reportcard-img]][reportcard-url]
-[![Go Report Card][coverage-img]][coverage-url]
+[![Coverage][coverage-img]][coverage-url]
 
 Fast reader for delimiter-separated data
 
@@ -48,11 +48,11 @@ See [these docs](https://godoc.org/github.com/cristalhq/dsvreader).
 
 [MIT License](LICENSE).
 
-[travis-img]: https://travis-ci.org/cristalhq/dsvreader.svg?branch=master
-[travis-url]: https://travis-ci.org/cristalhq/dsvreader
+[build-img]: https://github.com/cristalhq//workflows/build/badge.svg
+[build-url]: https://github.com/cristalhq/dsvreader/actions
 [doc-img]: https://godoc.org/github.com/cristalhq/dsvreader?status.svg
 [doc-url]: https://godoc.org/github.com/cristalhq/dsvreader
 [reportcard-img]: https://goreportcard.com/badge/cristalhq/dsvreader
 [reportcard-url]: https://goreportcard.com/report/cristalhq/dsvreader
-[coverage-img]: https://coveralls.io/repos/github/cristalhq/dsvreader/badge.svg?branch=master
-[coverage-url]: https://coveralls.io/github/cristalhq/dsvreader?branch=master
+[coverage-img]: https://codecov.io/gh/cristalhq/dsvreader/branch/master/graph/badge.svg
+[coverage-url]: https://codecov.io/gh/cristalhq/dsvreader
