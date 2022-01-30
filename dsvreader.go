@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"unsafe"
 )
 
 // NewCSV returns new Reader that reads CSV data from r.
@@ -273,8 +272,4 @@ func (tr *Reader) nextCol() ([]byte, error) {
 
 func (tr *Reader) setColError(msg string, err error) {
 	tr.err = fmt.Errorf("%s at row #%d, col #%d %q: %s", msg, tr.row, tr.col, tr.rowBuf, err)
-}
-
-func b2s(b []byte) string {
-	return *(*string)(unsafe.Pointer(&b))
 }
