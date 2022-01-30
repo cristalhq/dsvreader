@@ -1,6 +1,7 @@
 package dsvreader
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -58,7 +59,7 @@ func (tr *Reader) DateTime() time.Time {
 
 func parseDateTime(s string) (time.Time, error) {
 	if len(s) != len("YYYY-MM-DD hh:mm:ss") {
-		return zeroTime, fmt.Errorf("too short datetime")
+		return zeroTime, errors.New("too short datetime")
 	}
 	y, m, d, err := parseDate(s[:len("YYYY-MM-DD")])
 	if err != nil {
@@ -66,22 +67,22 @@ func parseDateTime(s string) (time.Time, error) {
 	}
 	s = s[len("YYYY-MM-DD"):]
 	if s[0] != ' ' || s[3] != ':' || s[6] != ':' {
-		return zeroTime, fmt.Errorf("invalid time format. Must be hh:mm:ss")
+		return zeroTime, errors.New("invalid time format. Must be hh:mm:ss")
 	}
 	hS := s[1:3]
 	minS := s[4:6]
 	secS := s[7:]
 	h, err := strconv.Atoi(hS)
 	if err != nil {
-		return zeroTime, fmt.Errorf("invalid hour: %s", err)
+		return zeroTime, fmt.Errorf("invalid hour: %w", err)
 	}
 	min, err := strconv.Atoi(minS)
 	if err != nil {
-		return zeroTime, fmt.Errorf("invalid minute: %s", err)
+		return zeroTime, fmt.Errorf("invalid minute: %w", err)
 	}
 	sec, err := strconv.Atoi(secS)
 	if err != nil {
-		return zeroTime, fmt.Errorf("invalid second: %s", err)
+		return zeroTime, fmt.Errorf("invalid second: %w", err)
 	}
 	if y == 0 && m == 0 && d == 0 {
 		// Special case for ClickHouse
@@ -92,31 +93,26 @@ func parseDateTime(s string) (time.Time, error) {
 
 func parseDate(s string) (y, m, d int, err error) {
 	if len(s) != len("YYYY-MM-DD") {
-		err = fmt.Errorf("too short date")
-		return
+		return 0, 0, 0, errors.New("too short date")
 	}
 	s = s[:len("YYYY-MM-DD")]
 	if s[4] != '-' && s[7] != '-' {
-		err = fmt.Errorf("invalid date format. Must be YYYY-MM-DD")
-		return
+		return 0, 0, 0, errors.New("invalid date format. Must be YYYY-MM-DD")
 	}
 	yS := s[:4]
 	mS := s[5:7]
 	dS := s[8:]
 	y, err = strconv.Atoi(yS)
 	if err != nil {
-		err = fmt.Errorf("invalid year: %s", err)
-		return
+		return 0, 0, 0, fmt.Errorf("invalid year: %w", err)
 	}
 	m, err = strconv.Atoi(mS)
 	if err != nil {
-		err = fmt.Errorf("invalid month: %s", err)
-		return
+		return 0, 0, 0, fmt.Errorf("invalid month: %w", err)
 	}
 	d, err = strconv.Atoi(dS)
 	if err != nil {
-		err = fmt.Errorf("invalid day: %s", err)
-		return
+		return 0, 0, 0, fmt.Errorf("invalid day: %w", err)
 	}
 	return y, m, d, nil
 }

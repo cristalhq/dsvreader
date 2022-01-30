@@ -1,9 +1,14 @@
 package dsvreader
 
 import (
-	"fmt"
+	"errors"
 	"math"
 	"strconv"
+)
+
+var (
+	errOutOfRange    = errors.New("out of range")
+	errInvalidSyntex = errors.New("invalid syntax")
 )
 
 // Int returns the next int column value from the current row.
@@ -122,7 +127,7 @@ func (tr *Reader) Int16() int16 {
 		return 0
 	}
 	if n < math.MinInt16 || n > math.MaxInt16 {
-		tr.setColError("cannot parse `int16`", fmt.Errorf("out of range"))
+		tr.setColError("cannot parse `int16`", errOutOfRange)
 		return 0
 	}
 	return int16(n)
@@ -144,11 +149,11 @@ func (tr *Reader) Uint16() uint16 {
 		return 0
 	}
 	if n < 0 {
-		tr.setColError("cannot parse `uint16`", fmt.Errorf("invalid syntax"))
+		tr.setColError("cannot parse `uint16`", errInvalidSyntex)
 		return 0
 	}
 	if n > math.MaxUint16 {
-		tr.setColError("cannot parse `uint16`", fmt.Errorf("out of range"))
+		tr.setColError("cannot parse `uint16`", errOutOfRange)
 		return 0
 	}
 	return uint16(n)
@@ -170,7 +175,7 @@ func (tr *Reader) Int8() int8 {
 		return 0
 	}
 	if n < math.MinInt8 || n > math.MaxInt8 {
-		tr.setColError("cannot parse `int8`", fmt.Errorf("out of range"))
+		tr.setColError("cannot parse `int8`", errOutOfRange)
 		return 0
 	}
 	return int8(n)
@@ -192,11 +197,11 @@ func (tr *Reader) Uint8() uint8 {
 		return 0
 	}
 	if n < 0 {
-		tr.setColError("cannot parse `uint8`", fmt.Errorf("invalid syntax"))
+		tr.setColError("cannot parse `uint8`", errInvalidSyntex)
 		return 0
 	}
 	if n > math.MaxUint8 {
-		tr.setColError("cannot parse `uint8`", fmt.Errorf("out of range"))
+		tr.setColError("cannot parse `uint8`", errOutOfRange)
 		return 0
 	}
 	return uint8(n)
@@ -216,7 +221,7 @@ func (tr *Reader) Int64() int64 {
 
 	// Fast path - attempt to use Atoi
 	n, err := strconv.Atoi(s)
-	if err == nil && int64(n) >= math.MinInt64 && int64(n) <= math.MaxInt64 {
+	if err == nil {
 		return int64(n)
 	}
 
@@ -243,7 +248,7 @@ func (tr *Reader) Uint64() uint64 {
 
 	// Fast path - attempt to use Atoi
 	n, err := strconv.Atoi(s)
-	if err == nil && n >= 0 && uint64(n) <= math.MaxUint64 {
+	if err == nil && n >= 0 {
 		return uint64(n)
 	}
 

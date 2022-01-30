@@ -2,40 +2,37 @@ package dsvreader
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 )
 
 // NewCSV returns new Reader that reads CSV data from r.
 func NewCSV(r io.Reader) *Reader {
-	var tr Reader
-	tr.sep = ','
+	tr := &Reader{sep: ','}
 	tr.Reset(r)
-	return &tr
+	return tr
 }
 
 // NewTSV returns new Reader that reads TSV data from r.
 func NewTSV(r io.Reader) *Reader {
-	var tr Reader
-	tr.sep = '\t'
+	tr := &Reader{sep: '\t'}
 	tr.Reset(r)
-	return &tr
+	return tr
 }
 
 // NewPSV returns new Reader that reads PSV data from r.
 func NewPSV(r io.Reader) *Reader {
-	var tr Reader
-	tr.sep = '|'
+	tr := &Reader{sep: '|'}
 	tr.Reset(r)
-	return &tr
+	return tr
 }
 
 // NewCustom returns new Reader that reads arbitrary delimiter-separated data from r.
 func NewCustom(sep byte, r io.Reader) *Reader {
-	var tr Reader
-	tr.sep = sep
+	tr := &Reader{sep: sep}
 	tr.Reset(r)
-	return &tr
+	return tr
 }
 
 // Reader reads delimiter-separated data.
@@ -130,7 +127,7 @@ func (tr *Reader) Next() bool {
 			if tr.rErr != nil {
 				tr.err = tr.rErr
 				if tr.err != io.EOF {
-					tr.err = fmt.Errorf("cannot read row #%d: %s", tr.row, tr.err)
+					tr.err = fmt.Errorf("cannot read row #%d: %w", tr.row, tr.err)
 				} else if len(tr.scratch) > 0 {
 					tr.err = fmt.Errorf("cannot find newline at the end of row #%d; row: %q", tr.row, tr.scratch)
 				}
@@ -249,12 +246,12 @@ func (tr *Reader) String() string {
 
 func (tr *Reader) nextCol() ([]byte, error) {
 	if tr.row == 0 {
-		return nil, fmt.Errorf("missing Next call")
+		return nil, errors.New("missing Next call")
 	}
 
 	tr.col++
 	if tr.b == nil {
-		return nil, fmt.Errorf("no more columns")
+		return nil, errors.New("no more columns")
 	}
 
 	n := bytes.IndexByte(tr.b, tr.sep)

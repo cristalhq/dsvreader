@@ -109,14 +109,14 @@ func TestReaderResetError(t *testing.T) {
 		t.Fatalf("Next must return true")
 	}
 	bb = r.Bytes()
-	if string(bb) != "" {
+	if len(bb) != 0 {
 		t.Fatalf("unexpected non-empty bytes: %q", bb)
 	}
 	if r.Error() != nil {
 		t.Fatalf("unexpected error: %s", r.Error())
 	}
 	bb = r.Bytes()
-	if string(bb) != "" {
+	if len(bb) != 0 {
 		t.Fatalf("unexpected non-empty bytes: %q", bb)
 	}
 	err := r.Error()
@@ -673,7 +673,7 @@ func TestReaderMultiRowsMultiCols(t *testing.T) {
 	testReaderMultiRowsMultiCols(t, 3, 500)
 }
 
-func testReaderMultiRowsMultiCols(t *testing.T, rows int, cols int) {
+func testReaderMultiRowsMultiCols(t *testing.T, rows, cols int) {
 	t.Helper()
 
 	var expected [][]string
