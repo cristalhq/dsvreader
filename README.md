@@ -4,8 +4,9 @@
 [![pkg-img]][pkg-url]
 [![reportcard-img]][reportcard-url]
 [![coverage-img]][coverage-url]
+[![version-img]][version-url]
 
-Fast reader for delimiter-separated data
+Fast reader for delimiter-separated data.
 
 ## Features
 
@@ -16,6 +17,8 @@ Fast reader for delimiter-separated data
 * Based on [Aliaksandr Valialkin's TSVReader](https://github.com/valyala/tsvreader)
 
 ## Install
+
+Go version 1.17+
 
 ```
 go get github.com/cristalhq/dsvreader
@@ -56,3 +59,5 @@ See [these docs][pkg-url].
 [reportcard-url]: https://goreportcard.com/report/cristalhq/dsvreader
 [coverage-img]: https://codecov.io/gh/cristalhq/dsvreader/branch/master/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/cristalhq/dsvreader
+[version-img]: https://img.shields.io/github/v/release/cristalhq/dsvreader
+[version-url]: https://github.com/cristalhq/dsvreader/releases
