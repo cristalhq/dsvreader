@@ -40,6 +40,7 @@ func (tr *Reader) Uint() uint {
 		tr.setColError("cannot read `uint`", err)
 		return 0
 	}
+
 	s := b2s(b)
 
 	// Fast path - attempt to use Atoi
@@ -67,6 +68,7 @@ func (tr *Reader) Int32() int32 {
 		tr.setColError("cannot read `int32`", err)
 		return 0
 	}
+
 	s := b2s(b)
 
 	// Fast path - attempt to use Atoi
@@ -94,6 +96,7 @@ func (tr *Reader) Uint32() uint32 {
 		tr.setColError("cannot read `uint32`", err)
 		return 0
 	}
+
 	s := b2s(b)
 
 	// Fast path - attempt to use Atoi
@@ -122,15 +125,15 @@ func (tr *Reader) Int16() int16 {
 		return 0
 	}
 	n, err := strconv.Atoi(b2s(b))
-	if err != nil {
+	switch {
+	case err != nil:
 		tr.setColError("cannot parse `int16`", err)
-		return 0
-	}
-	if n < math.MinInt16 || n > math.MaxInt16 {
+	case n < math.MinInt16 || n > math.MaxInt16:
 		tr.setColError("cannot parse `int16`", errOutOfRange)
-		return 0
+	default:
+		return int16(n)
 	}
-	return int16(n)
+	return 0
 }
 
 // Uint16 returns the next uint16 column value from the current row.
@@ -144,19 +147,17 @@ func (tr *Reader) Uint16() uint16 {
 		return 0
 	}
 	n, err := strconv.Atoi(b2s(b))
-	if err != nil {
+	switch {
+	case err != nil:
 		tr.setColError("cannot parse `uint16`", err)
-		return 0
-	}
-	if n < 0 {
+	case n < 0:
 		tr.setColError("cannot parse `uint16`", errInvalidSyntex)
-		return 0
-	}
-	if n > math.MaxUint16 {
+	case n > math.MaxUint16:
 		tr.setColError("cannot parse `uint16`", errOutOfRange)
-		return 0
+	default:
+		return uint16(n)
 	}
-	return uint16(n)
+	return 0
 }
 
 // Int8 returns the next int8 column value from the current row.
@@ -170,15 +171,15 @@ func (tr *Reader) Int8() int8 {
 		return 0
 	}
 	n, err := strconv.Atoi(b2s(b))
-	if err != nil {
+	switch {
+	case err != nil:
 		tr.setColError("cannot parse `int8`", err)
-		return 0
-	}
-	if n < math.MinInt8 || n > math.MaxInt8 {
+	case n < math.MinInt8 || n > math.MaxInt8:
 		tr.setColError("cannot parse `int8`", errOutOfRange)
-		return 0
+	default:
+		return int8(n)
 	}
-	return int8(n)
+	return 0
 }
 
 // Uint8 returns the next uint8 column value from the current row.
@@ -192,19 +193,17 @@ func (tr *Reader) Uint8() uint8 {
 		return 0
 	}
 	n, err := strconv.Atoi(b2s(b))
-	if err != nil {
+	switch {
+	case err != nil:
 		tr.setColError("cannot parse `uint8`", err)
-		return 0
-	}
-	if n < 0 {
+	case n < 0:
 		tr.setColError("cannot parse `uint8`", errInvalidSyntex)
-		return 0
-	}
-	if n > math.MaxUint8 {
+	case n > math.MaxUint8:
 		tr.setColError("cannot parse `uint8`", errOutOfRange)
-		return 0
+	default:
+		return uint8(n)
 	}
-	return uint8(n)
+	return 0
 }
 
 // Int64 returns the next int64 column value from the current row.
@@ -217,6 +216,7 @@ func (tr *Reader) Int64() int64 {
 		tr.setColError("cannot read `int64`", err)
 		return 0
 	}
+
 	s := b2s(b)
 
 	// Fast path - attempt to use Atoi
@@ -244,6 +244,7 @@ func (tr *Reader) Uint64() uint64 {
 		tr.setColError("cannot read `uint64`", err)
 		return 0
 	}
+
 	s := b2s(b)
 
 	// Fast path - attempt to use Atoi
@@ -271,9 +272,7 @@ func (tr *Reader) Float32() float32 {
 		tr.setColError("cannot read `float32`", err)
 		return 0
 	}
-	s := b2s(b)
-
-	f32, err := strconv.ParseFloat(s, 32)
+	f32, err := strconv.ParseFloat(b2s(b), 32)
 	if err != nil {
 		tr.setColError("cannot parse `float32`", err)
 		return 0
@@ -291,9 +290,7 @@ func (tr *Reader) Float64() float64 {
 		tr.setColError("cannot read `float64`", err)
 		return 0
 	}
-	s := b2s(b)
-
-	f64, err := strconv.ParseFloat(s, 64)
+	f64, err := strconv.ParseFloat(b2s(b), 64)
 	if err != nil {
 		tr.setColError("cannot parse `float64`", err)
 		return 0

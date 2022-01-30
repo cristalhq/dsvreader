@@ -135,7 +135,7 @@ func (tr *Reader) Next() bool {
 			}
 			n, err := tr.r.Read(tr.rBuf[:])
 			tr.rb = tr.rBuf[:n]
-			tr.needUnescape = (bytes.IndexByte(tr.rb, '\\') >= 0)
+			tr.needUnescape = bytes.IndexByte(tr.rb, '\\') >= 0
 			tr.rErr = err
 		}
 
@@ -167,8 +167,7 @@ func (tr *Reader) SkipCol() {
 	if tr.err != nil {
 		return
 	}
-	_, err := tr.nextCol()
-	if err != nil {
+	if _, err := tr.nextCol(); err != nil {
 		tr.setColError("cannot skip column", err)
 	}
 }
@@ -187,15 +186,13 @@ func (tr *Reader) Bytes() []byte {
 	}
 
 	if !tr.needUnescape {
-		// Fast path - nothing to unescape.
-		return b
+		return b // Fast path - nothing to unescape.
 	}
 
 	// Unescape b
 	n := bytes.IndexByte(b, '\\')
 	if n < 0 {
-		// Nothing to unescape in the current column.
-		return b
+		return b // Nothing to unescape in the current column.
 	}
 
 	// Slow path - in-place unescaping compatible with ClickHouse.
@@ -268,5 +265,5 @@ func (tr *Reader) nextCol() ([]byte, error) {
 }
 
 func (tr *Reader) setColError(msg string, err error) {
-	tr.err = fmt.Errorf("%s at row #%d, col #%d %q: %s", msg, tr.row, tr.col, tr.rowBuf, err)
+	tr.err = fmt.Errorf("%s at row #%d, col #%d %q: %w", msg, tr.row, tr.col, tr.rowBuf, err)
 }

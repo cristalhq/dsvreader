@@ -21,15 +21,12 @@ func (tr *Reader) Date() time.Time {
 		tr.setColError("cannot read `date`", err)
 		return zeroTime
 	}
-	s := b2s(b)
-
-	y, m, d, err := parseDate(s)
+	y, m, d, err := parseDate(b2s(b))
 	if err != nil {
 		tr.setColError("cannot parse `date`", err)
 		return zeroTime
 	}
 	if y == 0 && m == 0 && d == 0 {
-		// special case for ClickHouse
 		return zeroTime
 	}
 	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
@@ -47,9 +44,7 @@ func (tr *Reader) DateTime() time.Time {
 		tr.setColError("cannot read `datetime`", err)
 		return zeroTime
 	}
-	s := b2s(b)
-
-	dt, err := parseDateTime(s)
+	dt, err := parseDateTime(b2s(b))
 	if err != nil {
 		tr.setColError("cannot parse `datetime`", err)
 		return zeroTime
@@ -69,9 +64,7 @@ func parseDateTime(s string) (time.Time, error) {
 	if s[0] != ' ' || s[3] != ':' || s[6] != ':' {
 		return zeroTime, errors.New("invalid time format. Must be hh:mm:ss")
 	}
-	hS := s[1:3]
-	minS := s[4:6]
-	secS := s[7:]
+	hS, minS, secS := s[1:3], s[4:6], s[7:]
 	h, err := strconv.Atoi(hS)
 	if err != nil {
 		return zeroTime, fmt.Errorf("invalid hour: %w", err)
@@ -85,7 +78,6 @@ func parseDateTime(s string) (time.Time, error) {
 		return zeroTime, fmt.Errorf("invalid second: %w", err)
 	}
 	if y == 0 && m == 0 && d == 0 {
-		// Special case for ClickHouse
 		return zeroTime, nil
 	}
 	return time.Date(y, time.Month(m), d, h, min, sec, 0, time.UTC), nil
@@ -99,9 +91,7 @@ func parseDate(s string) (y, m, d int, err error) {
 	if s[4] != '-' && s[7] != '-' {
 		return 0, 0, 0, errors.New("invalid date format. Must be YYYY-MM-DD")
 	}
-	yS := s[:4]
-	mS := s[5:7]
-	dS := s[8:]
+	yS, mS, dS := s[:4], s[5:7], s[8:]
 	y, err = strconv.Atoi(yS)
 	if err != nil {
 		return 0, 0, 0, fmt.Errorf("invalid year: %w", err)
