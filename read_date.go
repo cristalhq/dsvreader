@@ -11,7 +11,7 @@ var zeroTime time.Time
 
 // Date returns the next date column value from the current row.
 //
-// date must be in the format YYYY-MM-DD
+// date must be in the format YYYY-MM-DD.
 func (tr *Reader) Date() time.Time {
 	if tr.err != nil {
 		return zeroTime
@@ -45,6 +45,26 @@ func (tr *Reader) DateTime() time.Time {
 		return zeroTime
 	}
 	dt, err := parseDateTime(b2s(b))
+	if err != nil {
+		tr.setColError("cannot parse `datetime`", err)
+		return zeroTime
+	}
+	return dt
+}
+
+// DateTimeFormatted returns the next datetime column value from the current row.
+func (tr *Reader) DateTimeFormatted(layout string) time.Time {
+	if tr.err != nil {
+		return zeroTime
+	}
+
+	b, err := tr.nextCol()
+	if err != nil {
+		tr.setColError("cannot read `datetime`", err)
+		return zeroTime
+	}
+
+	dt, err := time.Parse(layout, b2s(b))
 	if err != nil {
 		tr.setColError("cannot parse `datetime`", err)
 		return zeroTime
