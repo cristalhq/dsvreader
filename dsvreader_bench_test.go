@@ -19,6 +19,7 @@ func BenchmarkReaderBytes(b *testing.B) {
 }
 
 func benchmarkReaderBytes(b *testing.B, rows, cols int) {
+	b.Helper()
 	b.StopTimer()
 	bb := createBytesTSV(rows, cols)
 	br := bytes.NewReader(bb)
@@ -33,6 +34,7 @@ func benchmarkReaderBytes(b *testing.B, rows, cols int) {
 }
 
 func benchmarkReaderBytesSingleIter(b *testing.B, r *Reader, rows, cols int) {
+	b.Helper()
 	for i := 0; i < rows; i++ {
 		if !r.Next() {
 			b.Fatalf("Reader.Next must return true on row #%d", i+1)
@@ -58,6 +60,7 @@ func BenchmarkReaderInt(b *testing.B) {
 }
 
 func benchmarkReaderInt(b *testing.B, rows, cols int) {
+	b.Helper()
 	b.StopTimer()
 	bb := createIntTSV(rows, cols)
 	br := bytes.NewReader(bb)
@@ -72,6 +75,7 @@ func benchmarkReaderInt(b *testing.B, rows, cols int) {
 }
 
 func benchmarkReaderIntSingleIter(b *testing.B, r *Reader, rows, cols int) {
+	b.Helper()
 	for i := 0; i < rows; i++ {
 		if !r.Next() {
 			b.Fatalf("Reader.Next must return true on row #%d", i+1)
@@ -97,6 +101,8 @@ func BenchmarkReaderUint(b *testing.B) {
 }
 
 func benchmarkReaderUint(b *testing.B, rows, cols int) {
+	b.Helper()
+
 	b.StopTimer()
 	bb := createUintTSV(rows, cols)
 	br := bytes.NewReader(bb)
@@ -111,6 +117,8 @@ func benchmarkReaderUint(b *testing.B, rows, cols int) {
 }
 
 func benchmarkReaderUintSingleIter(b *testing.B, r *Reader, rows, cols int) {
+	b.Helper()
+
 	for i := 0; i < rows; i++ {
 		if !r.Next() {
 			b.Fatalf("Reader.Next must return true on row #%d", i+1)

@@ -28,27 +28,6 @@ bar	123
 	// col1=bar, col2=123
 }
 
-func ExampleCSVReader() {
-	bs := bytes.NewBufferString(
-		`foo,42
-bar,123
-`)
-
-	r := dsvreader.NewCSV(bs)
-	for r.Next() {
-		col1 := r.String()
-		col2 := r.Int()
-		fmt.Printf("col1=%s, col2=%d\n", col1, col2)
-	}
-	if err := r.Error(); err != nil {
-		fmt.Printf("unexpected error: %s", err)
-	}
-
-	// Output:
-	// col1=foo, col2=42
-	// col1=bar, col2=123
-}
-
 func ExampleReader_HasCols() {
 	bs := bytes.NewBufferString(
 		"foo\n" +
@@ -92,4 +71,25 @@ func ExampleReader_Next() {
 	// 2
 	// 3
 	// 42
+}
+
+func Example_csvReader() {
+	bs := bytes.NewBufferString(
+		`foo,42
+bar,123
+`)
+
+	r := dsvreader.NewCSV(bs)
+	for r.Next() {
+		col1 := r.String()
+		col2 := r.Int()
+		fmt.Printf("col1=%s, col2=%d\n", col1, col2)
+	}
+	if err := r.Error(); err != nil {
+		fmt.Printf("unexpected error: %s", err)
+	}
+
+	// Output:
+	// col1=foo, col2=42
+	// col1=bar, col2=123
 }
